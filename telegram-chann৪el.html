@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Channel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f1419;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .telegram-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #17212b;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .channel-header {
+            background: #2b5278;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #1e2832;
+        }
+
+        .channel-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0088cc, #00aaff);
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        .channel-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+
+        .channel-username {
+            font-size: 14px;
+            color: #8bb3d9;
+            margin-bottom: 8px;
+        }
+
+        .channel-subscribers {
+            font-size: 14px;
+            color: #8bb3d9;
+        }
+
+        .posts-container {
+            padding: 0;
+        }
+
+        .post {
+            background: #17212b;
+            margin: 0;
+            padding: 15px 20px;
+            border-bottom: 1px solid #1e2832;
+            position: relative;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0088cc, #00aaff);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-channel-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .post-time {
+            font-size: 13px;
+            color: #8bb3d9;
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.4;
+            color: #ffffff;
+        }
+
+        .post-image {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #2b5278, #0088cc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .post-reactions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .reaction {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #8bb3d9;
+            font-size: 13px;
+        }
+
+        .reaction-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .views {
+            margin-left: auto;
+            color: #8bb3d9;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            .telegram-container {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        // ========== কাস্টমাইজেশন সেকশন ==========
+        // এখানে আপনার ছবির লিংক দিন
+        
+        // চ্যানেল প্রোফাইল ছবি
+        const channelProfileImage = "https://i.postimg.cc/JnSRLD6G/IMG-20250916-152258-345.jpg";
+        
+        // পোস্টের ছবিগুলো (৫টি পোস্টের জন্য ৫টি লিংক)
+        const postImages = [
+            "https://i.postimg.cc/tJ6mVYXZ/1758014217556.jpg",
+            "https://i.postimg.cc/YS198xbb/1758014128939.jpg", 
+            "https://i.postimg.cc/wT7jnzwt/1758014135398.jpg",
+            "https://i.postimg.cc/B6Sqpf8n/1758014110614.jpg",
+            "https://i.postimg.cc/1RY9GTyy/1758014162903.jpg"
+        ];
+        
+        // ========== অটো সেটআপ (এডিট করবেন না) ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // চ্যানেল প্রোফাইল ছবি সেট করা
+            const channelAvatar = document.querySelector('.channel-avatar');
+            const postAvatars = document.querySelectorAll('.post-avatar');
+            
+            if (channelProfileImage && channelProfileImage !== "https://example.com/your-channel-profile.jpg") {
+                channelAvatar.style.backgroundImage = `url(${channelProfileImage})`;
+                channelAvatar.innerHTML = '';
+                
+                // পোস্ট অ্যাভাটারগুলোও একই ছবি দিয়ে সেট করা
+                postAvatars.forEach(avatar => {
+                    avatar.style.backgroundImage = `url(${channelProfileImage})`;
+                    avatar.innerHTML = '';
+                });
+            }
+            
+            // পোস্ট ছবিগুলো সেট করা
+            const postImageElements = document.querySelectorAll('.post-image');
+            postImageElements.forEach((element, index) => {
+                if (postImages[index] && postImages[index] !== `https://example.com/post${index+1}-image.jpg`) {
+                    element.style.backgroundImage = `url(${postImages[index]})`;
+                    element.innerHTML = '';
+                }
+            });
+        });
+    </script>
+
+    <div class="telegram-container">
+        <!-- Channel Header -->
+        <div class="channel-header">
+            <div class="channel-avatar">TC</div>
+            <div class="channel-name">হট ভিডিও</div>
+            <div class="channel-username">@hot video</div>
+            <div class="channel-subscribers">3.7K subscribers</div>
+        </div>
+
+        <!-- Posts Container -->
+        <div class="posts-container">
+            <!-- Post 1 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">TC</div>
+                    <div class="post-info">
+                        <div class="post-channel-name">হট ভিডিও</div>
+                        <div class="post-time">Today at 2:30 PM</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                <p>
+  রাত্রি আপুর অস্থির ভিডিও লিংক!<br> একবার দেখলে আবার দেখতে মন চাইবে: <br>
+  <a href="https://rebrand.ly/7003ef" target="_blank">এখানে ক্লিক করুন</a>
+</p>
+
+<p>
+  দ্বিতীয় লিংক: 
+  <a href="https://videosite-silk.vercel.app/" target="_blank">ভিডিও লিংক</a>
+</p>
+
+<p>
+  ১৮+ গেম খেলতে ভিজিট করুন: 
+  <a href="https://fap-nation.com/where-the-heart-is/" target="_blank">হট গেম এর লিংক</a>
+</p>
+
+                </div>
+                <div class="post-image">📱 Mobile Tech Image</div>
+                <div class="post-reactions">
+                    <div class="reaction">
+                        <span class="reaction-icon">👍</span>
+                        <span>1.2K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">❤️</span>
+                        <span>856</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">🔥</span>
+                        <span>432</span>
+                    </div>
+                    <div class="views">15.3K views</div>
+                </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">TC</div>
+                    <div class="post-info">
+                        <div class="post-channel-name">হট ভিডিও</div>
+                        <div class="post-time">Yesterday at 6:45 PM</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>
+  ফেসবুকে ভাইরাল সকল লিংক একসাথে পেয়ে যাবেন এই বটে! এখুনি start বাটনে ক্লিক করে দেখে আসুন!: 
+  <a href="https://t.me/hotlink43_bot?startapp" target="_blank">টেলিগ্রাম বট লিংক</a><br>
+  <a href="https://t.me/viral477_bot?startapp" target="_blank">টেলিগ্রাম বট লিংক২</a>
+</p>
+                </div>
+                <div class="post-image">⚡ Productivity Tools</div>
+                <div class="post-reactions">
+                    <div class="reaction">
+                        <span class="reaction-icon">👍</span>
+                        <span>2.1K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">🎯</span>
+                        <span>967</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">💯</span>
+                        <span>543</span>
+                    </div>
+                    <div class="views">22.7K views</div>
+                </div>
+            </div>
+
+            <!-- Post 3 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">TC</div>
+                    <div class="post-info">
+                        <div class="post-channel-name">হট ভিডিও</div>
+                        <div class="post-time">2 days ago</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>
+  🔞 Othoii এর অরজিনাল ভাইরাল ভিডিও 🥵
+ফুল ভিডিও:🔞 📎⬇️ 
+  <a href="https://t.co/HNuWw9Y7rf" target="_blank">ভিডিও লিংক</a>
+</p>
+                </div>
+                <div class="post-image">🎨 Design Showcase</div>
+                <div class="post-reactions">
+                    <div class="reaction">
+                        <span class="reaction-icon">👍</span>
+                        <span>1.8K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">😍</span>
+                        <span>1.2K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">🔥</span>
+                        <span>789</span>
+                    </div>
+                    <div class="views">18.9K views</div>
+                </div>
+            </div>
+
+            <!-- Post 4 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">TC</div>
+                    <div class="post-info">
+                        <div class="post-channel-name">হট ভিডিও</div>
+                        <div class="post-time">3 days ago</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>
+  কেয়া পায়েলের অস্থির দুটি গোপন ভিডিও:<br>
+  <a href="https://www.revenuecpmgate.com/r20g44pf4?key=21b02a63436294ee8ad07746550bb51c" target="_blank">ভিডিও লিংক</a><br>
+  <a href="https://www.revenuecpmgate.com/b0qv2kkxge?key=69799c7bf2506a022a58677834fa19af" target="_blank">ভিডিও লিংক</a>
+  <br> ভিডিও না আসলে লিংক এর মেয়াদ শেষ হয়ে গেছে!
+</p>
+                </div>
+                <div class="post-image">📚 Tutorial Guide</div>
+                <div class="post-reactions">
+                    <div class="reaction">
+                        <span class="reaction-icon">👍</span>
+                        <span>3.2K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">🙏</span>
+                        <span>1.5K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">💪</span>
+                        <span>892</span>
+                    </div>
+                    <div class="views">31.4K views</div>
+                </div>
+            </div>
+
+            <!-- Post 5 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="post-avatar">TC</div>
+                    <div class="post-info">
+                        <div class="post-channel-name">হট ভিডিও</div>
+                        <div class="post-time">1 week ago</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>
+  অথৈ আর রিধির ভাইরাল ২ টি ভিডিও ক্লিপ:<br> 
+  <a href="https://otieu.com/4/9722284" target="_blank">ভিডিও ক্লিপ</a><br>
+  <a href="https://otieu.com/4/9722284" target="_blank">ভিডিও ক্লিপ</a>
+</p>
+                </div>
+                <div class="post-image">📰 Weekly News</div>
+                <div class="post-reactions">
+                    <div class="reaction">
+                        <span class="reaction-icon">👍</span>
+                        <span>2.7K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">📌</span>
+                        <span>1.1K</span>
+                    </div>
+                    <div class="reaction">
+                        <span class="reaction-icon">⭐</span>
+                        <span>654</span>
+                    </div>
+                    <div class="views">25.8K views</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
